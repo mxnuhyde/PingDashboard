@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor IP</title>
+    <script>
+        function aggiornaStato() {
+            fetch("/stato")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("stato").innerText = data.is_online ? "🟢 ONLINE" : "🔴 OFFLINE";
+                });
+        }
+        setInterval(aggiornaStato, 5000);
+    </script>
+</head>
+<body>
+    <h1>Monitoraggio IP: {{ ip }}</h1>
+    <h2>Stato Attuale: <span id="stato">{% if is_online %}🟢 ONLINE{% else %}🔴 OFFLINE{% endif %}</span></h2>
+    <h3>Storico Ultimi 10 Stati:</h3>
+    <ul>
+        {% for timestamp, status in history %}
+            <li>{{ timestamp }} - {% if status %}🟢 ONLINE{% else %}🔴 OFFLINE{% endif %}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
